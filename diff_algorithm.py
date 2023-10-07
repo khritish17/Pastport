@@ -1,19 +1,37 @@
-def backtracking(old_text, new_text, dp):
-    i, j = len(dp) - 1, len(dp[0]) - 1
-    lcs = []
-    while i != 0 and j != 0:
-        old_word = old_text[i - 1]
-        new_word = new_text[j - 1]
 
-        if old_word == new_word:
-            i, j = i - 1, j - 1
-            lcs = [old_word] + lcs
-        else:
-            # old word != new word
-            if dp[i][j - 1] >= dp[i - 1][j]:
-                j -= 1
+def generate_commit_data(old_text, new_text, lcs):
+    # make sure to deal with old_text/new_text which are empty([]), becoz line 45, 47
+    
+    pass
+
+def backtracking(old_text, new_text, dp):
+    lcs = []
+    if old_text and new_text:
+        i, j = len(dp) - 1, len(dp[0]) - 1
+        while i != 0 and j != 0:
+            old_word = old_text[i - 1]
+            new_word = new_text[j - 1]
+
+            if old_word == new_word:
+                i, j = i - 1, j - 1
+                lcs = [(old_word, i, j)] + lcs
             else:
-                i -= 1
+                # old word != new word
+                if dp[i][j - 1] >= dp[i - 1][j]:
+                    j -= 1
+                else:
+                    i -= 1
+    else:
+        if old_text:
+            for i in range(len(old_text)):
+                lcs.append((old_text[i], i, None))
+
+        elif new_text:
+            for j in range(len(new_text)):
+                lcs.append((new_text[j], None, j))
+    print(lcs)
+    generate_commit_data(old_text, new_text, lcs)
+    # write the insertion and deletion 
 
 def longest_common_subsequence(old_text, new_text):
     # old_text and new_text are just single lines in text file
@@ -28,6 +46,10 @@ def longest_common_subsequence(old_text, new_text):
                 dp[i][j] = dp[i - 1][j - 1] + 1
             else:
                 dp[i][j] = max(dp[i][j - 1], dp[i - 1][j])
+    if old_text == ['']:
+        old_text = []
+    if new_text == ['']:
+        new_text = []
     backtracking(old_text, new_text, dp)
     
              
@@ -59,12 +81,6 @@ def diff_algorithm(old_file, new_file):
         except:
             new_line = ""
         
-        if old_line and new_line:
-            longest_common_subsequence(old_line, new_line)
-        elif old_line or new_line:
-            pass
+        longest_common_subsequence(old_line, new_line)
     
-    
-
-
 diff_algorithm('old.txt', 'new.txt')
