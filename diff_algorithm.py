@@ -1,8 +1,24 @@
 
 def generate_commit_data(old_text, new_text, lcs):
     # make sure to deal with old_text/new_text which are empty([]), becoz line 45, 47
+    # old text, new text are arrays 
+    old_index = []
+    new_index = []
+    for word, old_ind, new_ind in lcs:
+        old_index.append(old_ind)
+        new_index.append(new_ind)
+
+    insertion = []
+    for i in range(len(new_text)):
+        if i not in new_index:
+            insertion.append((new_text[i], i))
+
+    deletion = []
     
-    pass
+    for i in range(len(old_text)):
+        if i not in old_index:
+            deletion.append((old_text[i], i))
+    return insertion, deletion
 
 def backtracking(old_text, new_text, dp):
     lcs = []
@@ -21,16 +37,8 @@ def backtracking(old_text, new_text, dp):
                     j -= 1
                 else:
                     i -= 1
-    else:
-        if old_text:
-            for i in range(len(old_text)):
-                lcs.append((old_text[i], i, None))
-
-        elif new_text:
-            for j in range(len(new_text)):
-                lcs.append((new_text[j], None, j))
-    print(lcs)
-    generate_commit_data(old_text, new_text, lcs)
+        
+    return generate_commit_data(old_text, new_text, lcs)
     # write the insertion and deletion 
 
 def longest_common_subsequence(old_text, new_text):
@@ -50,7 +58,7 @@ def longest_common_subsequence(old_text, new_text):
         old_text = []
     if new_text == ['']:
         new_text = []
-    backtracking(old_text, new_text, dp)
+    return backtracking(old_text, new_text, dp)
     
              
 
@@ -69,7 +77,8 @@ def diff_algorithm(old_file, new_file):
     # there is no need to keep the files open
     old.close()
     new.close()
-
+    
+    commit_data = {}
     for i in range(max(old_length, new_length)):
         try:
             old_line = old_lines[i]
@@ -81,6 +90,6 @@ def diff_algorithm(old_file, new_file):
         except:
             new_line = ""
         
-        longest_common_subsequence(old_line, new_line)
-    
-diff_algorithm('old.txt', 'new.txt')
+        commit_data[i] = longest_common_subsequence(old_line, new_line)
+    return commit_data
+print(diff_algorithm('old.txt', 'new.txt'))
