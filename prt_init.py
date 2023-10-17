@@ -18,10 +18,17 @@ class prt_init:
         # create the pastport directory 
         try:
             os.mkdir(self.location + "/prt")
-            self.create_tracking_file()
+            # first make the commit, otherwise the commit algo won't understand that this
+            # is the first commit
+            # then create the tracking file 
+            tracking_file = open(self.location + "/prt/{}.track".format(self.directory_name.lower()),'w')
+            tracking_file.close()
+            # self.create_tracking_file()
         except:
             print("Unexpected Error, contact at khritish.official@gmail.com")
             exit()
+    
+    
     
     def create_tracking_file(self):
         tracking_file = open(self.location + "/prt/{}.track".format(self.directory_name.lower()),'w')
@@ -32,6 +39,7 @@ class prt_init:
                 tracking_file.write("{},".format(file))
             else:
                 tracking_file.write("{}\n".format(file))
+        tracking_file.close()
         
 
 

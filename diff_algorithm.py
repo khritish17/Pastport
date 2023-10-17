@@ -92,4 +92,4 @@ def diff_algorithm(old_file, new_file):
         
         commit_data[i] = longest_common_subsequence(old_line, new_line)
     return commit_data
-# print(diff_algorithm('old.txt', 'new.txt'))
+# print(diff_algorithm('old.old', 'old.txt'))
