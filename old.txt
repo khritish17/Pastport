@@ -1,1 +1,1 @@
-words are good but not bad
+words are good but not || bad

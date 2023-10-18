@@ -1,5 +1,7 @@
 import os
 import diff_algorithm as da
+import file_translator as ft 
+
 class prt_commit:
     def __init__(self, file, location = "") -> None:
         # the work of the commit file is to reconstructs the old file 
@@ -25,14 +27,6 @@ class prt_commit:
             self.cold_commit()
         else:
             self.commit()
-    
-    def write_commit(self):
-        commit_data_file = open(self.location + "/prt/{}.commit".format(self.file_name), "a")
-        commit_data_file.close()
-        pass
-    
-    def read_commit(self):
-        pass
 
     def commit(self):
         # generate the old file, 
@@ -50,6 +44,7 @@ class prt_commit:
         commit_data_file = open(self.location + "/prt/{}.commit".format(self.file_name), "w")
         commit_data_file.close()
         os.remove(self.location + "/{}.old".format(self.file_name))
-
-        pass
+        
+        ft.write_commit(self.location + "/prt/{}.commit".format(self.file_name), commit_data, 0, "first commit")
+        commit_data = ft.read_commit(self.location + "/prt/{}.commit".format(self.file_name), 0)
 cmt = prt_commit('old.txt')
