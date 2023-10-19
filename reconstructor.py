@@ -1,10 +1,10 @@
 import diff_algorithm as da
 
-def reconstuction(old_file, commit_data, outfile = 'temp_old.txt'):
-    old = open(old_file, 'r')
+def reconstuction(old_file_location, commit_data, outfile_location = 'temp_old.txt'):
+    old = open(old_file_location, 'r')
     old_lines = old.readlines()
 
-    new = open(outfile, 'w')
+    new = open(outfile_location, 'w')
     for i in range(max(len(old_lines), len(commit_data))):
         try:
             old_line = old_lines[i].split(' ')

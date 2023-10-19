@@ -1,5 +1,6 @@
 def write_commit(commit_data_file_location, commit_data, commit_number, commit_message):
-    # delimeter used is Pilcrow symbol (¶)
+    # delimeter used is Pilcrow symbol
+    # print(commit_data)
     commit_data_file = open(commit_data_file_location, 'a')
     commit_data_file.write(str(commit_number)+"\u00b6")
     for line, commits in commit_data.items():
@@ -11,7 +12,8 @@ def write_commit(commit_data_file_location, commit_data, commit_number, commit_m
         
         for word, index in deletion:
             commit_data_file.write("\u00b6{}\u00b6{}".format(word, index))
-    commit_data_file.write("\u00b6{}\n".format(commit_message))
+        commit_data_file.write("\u00b6")
+    commit_data_file.write("{}\n".format(commit_message))
 
     commit_data_file.close()
 
@@ -26,9 +28,11 @@ def read_commit(commit_data_file_location, commit_number):
     commit_array = commit_raw.split('\u00b6')
     i = 1
     commit_data = {}
+    # print(commit_array)
     while i < len(commit_array) - 1:
         line_number = commit_array[i]
         i += 1
+        # print("-> {}".format(commit_array[i]))
         insertion_length = int(commit_array[i])
         i += 1
         deletion_length = int(commit_array[i])
@@ -52,3 +56,4 @@ def read_commit(commit_data_file_location, commit_number):
         commit_data[int(line_number)] = (insertion, deletion)
     commit_data_file.close()
     return commit_data
+
