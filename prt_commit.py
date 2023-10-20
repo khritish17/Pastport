@@ -6,7 +6,7 @@ class prt_commit:
     def __init__(self, location = "", message = "Untitled Commit") -> None:
         # the work of the commit file is to reconstructs the old file 
         # and sends it along the new file to diff_algo for commit data creation
-        self.location = self.location = os.path.abspath(location)
+        self.location = os.path.abspath(location)
         self.message = message
         # get the directory name 
         self.directory_name = self.location.split("\\")[-1]
@@ -28,7 +28,7 @@ class prt_commit:
         directory_list = os.listdir(self.location)
         file_list = []
         for file_dir in directory_list:
-            if os.path.isfile(file_dir):
+            if os.path.isfile(self.location + "/{}".format(file_dir)):
                 file_list.append(file_dir)
 
         if len(tracking_lines) == 0:
@@ -94,4 +94,4 @@ class prt_commit:
         
         ft.write_commit(self.location + "/prt/{}.commit".format(file_name), commit_data, commit_number, "Initial commit")
 
-cmt = prt_commit()
+cmt = prt_commit(location= r'D:\Codes\Projects\Pastport\test_folder')

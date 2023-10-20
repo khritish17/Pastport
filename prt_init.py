@@ -13,7 +13,7 @@ class prt_init:
         directory_list = os.listdir(self.location)
         self.file_list = []
         for file_dir in directory_list:
-            if os.path.isfile(file_dir):
+            if os.path.isfile(self.location + "/{}".format(file_dir)):
                 self.file_list.append(file_dir)
         # create the pastport directory 
         try:
@@ -43,4 +43,4 @@ class prt_init:
         
 
 
-init = prt_init()
+init = prt_init(location= r'D:\Codes\Projects\Pastport\test_folder')

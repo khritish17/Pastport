@@ -7,11 +7,12 @@ def reconstuction(old_file_location, commit_data, outfile_location = 'temp_old.t
     new = open(outfile_location, 'w')
     for i in range(max(len(old_lines), len(commit_data))):
         try:
-            old_line = old_lines[i].split(' ')
+            old_line = old_lines[i].rstrip('\n').split(' ')
         except:
-            old_line = ""
+            old_line = []
         length = len(old_line) + len(commit_data[i][0]) - len(commit_data[i][1])
         new_line = [None]*length
+
         # process the insertion operation
         insertion = commit_data[i][0]
         for insert_word, insert_index in insertion:
@@ -29,8 +30,10 @@ def reconstuction(old_file_location, commit_data, outfile_location = 'temp_old.t
                     if poped_word != None:
                         new_line[i] = poped_word
                         break
+
         new_line = ' '.join(new_line) + '\n'
         new.write(new_line)
+    new.close()
 
 
 # commit_data = da.diff_algorithm('old.txt', 'new.txt')
