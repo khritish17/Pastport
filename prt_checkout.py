@@ -18,6 +18,8 @@ class prt_checkout:
         tracking_file_location = self.location + "/prt/{}.track".format(self.directory_name.lower())
         tracking_file = open(tracking_file_location, 'r')
         tracking_lines = tracking_file.readlines()
+        
+        # checkout_files = tracking_lines[commit_number].split('\u00b6')[1].rstrip('\n').split(',')
         try:
             checkout_files = tracking_lines[commit_number].split('\u00b6')[1].rstrip('\n').split(',')
         except:
@@ -25,14 +27,17 @@ class prt_checkout:
             exit()
         
         for file in checkout_files:
-            # print(file)
             file_name = file.split('.')[0]
             
             # reconstructing the old/initial file or the initial commit
-            if commit_number != 0:
+            temp_initial = open(self.location + "/prt/{}.commit".format(file_name), 'r')
+            initial_commit_number = int(temp_initial.readline().split('\u00b6')[0])
+            temp_initial.close()
+             
+            if commit_number != initial_commit_number:
                 initial_commit_file = open(self.location + "/{}.temp".format(file_name), 'w')
                 initial_commit_file.close()
-                initial_commit_data = ft.read_commit(self.location + "/prt/{}.commit".format(file_name), 0)
+                initial_commit_data = ft.read_commit(self.location + "/prt/{}.commit".format(file_name), initial_commit_number)
                 rc.reconstuction(self.location + "/{}.temp".format(file_name), initial_commit_data, self.location + "/{}.old".format(file_name))
                 os.remove(self.location + "/{}.temp".format(file_name))
             else:
@@ -49,8 +54,24 @@ class prt_checkout:
 
             # file manipulation
             # now first delete the original file
-            os.remove(self.location + "/{}".format(file))
+            # we use try-except block because some cases 
+            try:
+                os.remove(self.location + "/{}".format(file))
+            except:
+                pass
             # and rename the .new file to original name 
             os.rename(self.location + "/{}.new".format(file_name), self.location + "/{}".format(file))
+        
+        uncommited_files = []
+        total_file_dir = os.listdir(self.location)
+        
+        for file_dir in total_file_dir:
+            if os.path.isfile(self.location + "/{}".format(file_dir)) and file_dir not in checkout_files:
+                uncommited_files.append(file_dir)
+        
+        for file in uncommited_files:
+            os.remove(self.location + "/{}".format(file))
+
+
             
-CO = prt_checkout(2, location= r'D:\Codes\Projects\Pastport\test_folder')
+CO = prt_checkout(3, location= r'D:\Codes\Projects\Pastport\test_folder')
