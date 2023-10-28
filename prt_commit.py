@@ -49,6 +49,9 @@ class prt_commit:
             cur_commit_file = open(self.location + "/prt/{}.curcommit".format(self.directory_name.lower()), 'w')
             cur_commit_file.write('0')
             cur_commit_file.close()
+            log_file = open(self.location + "/prt/{}.log".format(self.directory_name.lower()), 'w')
+            log_file.write("{}\u00b6{}\n".format(0, self.message))
+            log_file.close()
             # --
         else:
             # Initiate normal commit for tracked files and cold commit for untracked files
@@ -77,8 +80,11 @@ class prt_commit:
             # --
             # writing the current commit number to .curcommit file
             cur_commit_file = open(self.location + "/prt/{}.curcommit".format(self.directory_name.lower()), 'w')
-            cur_commit_file.write(str(commit_number))
+            cur_commit_file.write(str(commit_number + 1))
             cur_commit_file.close()
+            log_file = open(self.location + "/prt/{}.log".format(self.directory_name.lower()), 'a')
+            log_file.write("{}\u00b6{}\n".format(commit_number + 1, self.message))
+            log_file.close()
             # --
 
             
@@ -111,4 +117,4 @@ class prt_commit:
         
         ft.write_commit(self.location + "/prt/{}.commit".format(file_name), commit_data, commit_number, "Initial commit")
 
-cmt = prt_commit(location= r'D:\Codes\Projects\Pastport\test_folder')
+# cmt = prt_commit(location= r'D:\Codes\Projects\Pastport\test_folder')

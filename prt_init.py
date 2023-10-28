@@ -1,4 +1,5 @@
 import os
+import terminal_output as to
 
 class prt_init:
     def __init__(self, location = "") -> None:
@@ -25,8 +26,9 @@ class prt_init:
             tracking_file.close()
             # self.create_tracking_file()
         except:
-            print("Unexpected Error, contact at khritish.official@gmail.com")
-            exit()
+            # print("Pastport already initialized")
+            to.output("PASTPORT initialization has already been completed", "r")
+            # exit()
     
     
     
@@ -43,4 +45,4 @@ class prt_init:
         
 
 
-init = prt_init(location= r'D:\Codes\Projects\Pastport\test_folder')
+# init = prt_init(location= r'D:\Codes\Projects\Pastport\test_folder')
