@@ -44,6 +44,12 @@ class prt_commit:
                 else:
                     tracking_file.write("{}\n".format(file))
             tracking_file.close()
+            # --
+            # writing the current commit number to .curcommit file
+            cur_commit_file = open(self.location + "/prt/{}.curcommit".format(self.directory_name.lower()), 'w')
+            cur_commit_file.write('0')
+            cur_commit_file.close()
+            # --
         else:
             # Initiate normal commit for tracked files and cold commit for untracked files
             tracking_file = open(self.tracking_file_location, 'r')
@@ -57,6 +63,7 @@ class prt_commit:
             tracking_file.write("{}\u00b6".format(commit_number + 1))
             for i in range(len(file_list)):
                 file = file_list[i]
+                
                 if file in tracked_files:
                     self.commit(file= file, commit_number= commit_number + 1)
                 else:
@@ -66,6 +73,16 @@ class prt_commit:
                 else:
                     tracking_file.write("{}\n".format(file))
             tracking_file.close()
+
+            # --
+            # writing the current commit number to .curcommit file
+            cur_commit_file = open(self.location + "/prt/{}.curcommit".format(self.directory_name.lower()), 'w')
+            cur_commit_file.write(str(commit_number))
+            cur_commit_file.close()
+            # --
+
+            
+
 
     def commit(self, file, commit_number):
         file_name = file.split('.')[0]

@@ -71,6 +71,13 @@ class prt_checkout:
         
         for file in uncommited_files:
             os.remove(self.location + "/{}".format(file))
+        
+        # --
+        # writing the current commit number to .curcommit file
+        cur_commit_file = open(self.location + "/prt/{}.curcommit".format(self.directory_name.lower()), 'w')
+        cur_commit_file.write(str(commit_number))
+        cur_commit_file.close()
+        # --
 
 
             
