@@ -39,7 +39,7 @@ init.create_tracking_file()
 - The Pastport system is designed to track changes to files within the specified directory.
 - If Pastport initialization has already been completed in the provided location, a message will be displayed to notify the user.
 
-Note: Ensure that the terminal_output and os modules are properly imported before using the prt_init class.
+> &#x26A0; Ensure that the terminal_output and os modules are properly imported before using the prt_init class.
 
 
 
@@ -108,4 +108,39 @@ cmt.cold_commit(file="new_file.txt", commit_number=1)
 - Normal commits are performed for tracked files based on the tracking information from the previous commit.
 - Commit data is stored in commit files within the "prt" directory.
 
-Note: Ensure that the required modules (os, diff_algorithm, file_translator, and reconstructor) are properly imported before using the prt_commit class.
+> &#x26A0; Ensure that the required modules (os, diff_algorithm, file_translator, and reconstructor) are properly imported before using the prt_commit class.
+
+
+
+# Pastport Checkout Module
+The **'prt_checkout'** class is a critical component of the Pastport system, allowing users to retrieve and apply the changes from a specific commit. This documentation provides an overview of the **'prt_checkout'** class and its methods.
+
+## File: pt_checkout.py | Class: prt_checkout
+### Constructor
+```
+def __init__(self, commit_number: int, location: str = "") -> None:
+```
+### Parameters
+- **'commit_number'** (int): The commit number to checkout.
+- **'location'** (str, optional): The absolute path to the directory where Pastport is initialized. If not provided, the current working directory will be used.
+
+### Description
+- Initializes the **'prt_checkout'** class with the specified commit number and location.
+- Validates Pastport initialization and retrieves the directory name.
+- Reads the tracking file to determine the files associated with the specified commit.
+- Reconstructs and replaces the files according to the commit number and commit data.
+- Updates the current commit number in the .curcommit file.
+#### Example
+```
+from pastport import prt_checkout
+
+# Checkout commit number 3 in a specified location
+CO = prt_checkout(commit_number=3, location=r'D:\Codes\Projects\Pastport\test_folder')
+```
+
+### Notes
+- The **'prt_checkout'** class facilitates the retrieval and application of changes from a specific commit within the Pastport system.
+- Files associated with the specified commit are reconstructed and replaced.
+- Uncommitted files are removed from the directory.
+
+> &#x26A0; Ensure that the required modules (os, file_translator, and reconstructor) are properly imported before using the prt_checkout class.
