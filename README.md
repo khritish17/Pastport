@@ -144,3 +144,79 @@ CO = prt_checkout(commit_number=3, location=r'D:\Codes\Projects\Pastport\test_fo
 - Uncommitted files are removed from the directory.
 
 > &#x26A0; Ensure that the required modules (os, file_translator, and reconstructor) are properly imported before using the prt_checkout class.
+
+
+
+
+
+
+
+
+# Pastport Status Module
+The **'prt_status'** class provides a mechanism for determining the status of files within a Pastport-enabled directory. It categorizes files into modified, untracked, and deleted based on the differences between the current state and the last committed state.
+
+## File: prt_status.py | Class: prt_status
+### Constructor
+```
+def __init__(self, location: str = "") -> None:
+```
+### Parameters
+- **'location'** (str, optional): The absolute path to the directory where Pastport is initialized. If not provided, the current working directory will be used.
+
+### Description
+- Initializes the prt_status class with the specified location.
+- Retrieves the directory name and the last commit number.
+- Reads the tracking file to obtain the list of tracked files.
+- Lists the current files in the directory.
+- Calls methods to check for modified, untracked, and deleted files.
+#### Example
+```
+from pastport import prt_status
+
+# Check the status of files in a specified location
+st = prt_status(location=r'D:\Codes\Projects\Pastport\test_folder')
+modified, untracked, deleted = st.get_status()
+print("Modified: {}".format(modified))
+print("Untracked: {}".format(untracked))
+print("Deleted: {}".format(deleted))
+```
+### Method: check_modified
+```
+def check_modified(self, last_commit_number: int) -> None:
+```
+### Parameters
+- **'last_commit_number'** (int): The last commit number to use as a reference.
+
+### Description
+- Reconstructs common files based on the last commit number.
+- Compares the reconstructed files with the current files to identify modifications.
+- Appends modified files to the modified list.
+
+### Method: check_untracked
+```
+def check_untracked(self) -> None:
+```
+### Description
+- Identifies untracked files by comparing the current files with tracked files.
+- Appends untracked files to the untracked list.
+### Method: check_deleted
+```
+def check_deleted(self) -> None:
+```
+### Description
+- Identifies deleted files by comparing tracked files with current files.
+- Appends deleted files to the deleted list.
+- Appends common files to the common_files list.
+### Method: get_status
+```
+def get_status(self) -> Tuple[List[str], List[str], List[str]]:
+```
+### Returns
+- **'Tuple[List[str], List[str], List[str]]'**: A tuple containing lists of modified, untracked, and deleted files.
+### Description
+- Returns the lists of modified, untracked, and deleted files.
+### Notes
+- The **'prt_status'** class is designed to provide a snapshot of file status within a Pastport-enabled directory.
+- The status is determined based on the differences between the current state and the last committed state.
+
+> &#x26A0; Ensure that the required modules (**'os'**, **'file_translator'**, and **'reconstructor'**) are properly imported before using the prt_status class.
