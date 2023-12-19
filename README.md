@@ -220,3 +220,85 @@ def get_status(self) -> Tuple[List[str], List[str], List[str]]:
 - The status is determined based on the differences between the current state and the last committed state.
 
 > &#x26A0; Ensure that the required modules (**'os'**, **'file_translator'**, and **'reconstructor'**) are properly imported before using the prt_status class.
+
+
+
+
+
+
+
+
+
+
+# Diff Algorithm Module (Longest Common Subsequence)
+The **'diff_algorithm'** module provides functions for comparing two text files and generating commit data based on the differences between them.
+
+### Function: generate_commit_data
+```
+def generate_commit_data(old_text: List[str], new_text: List[str], lcs: List[Tuple[str, int, int]]) -> Tuple[List[Tuple[str, int]], List[Tuple[str, int]]]:
+```
+### Parameters
+- **'old_text'** (List[str]): List of words from the old text.
+- **'new_text'** (List[str]): List of words from the new text.
+- **'lcs'** (List[Tuple[str, int, int]]): List of tuples representing the Longest Common Subsequence.
+### Returns
+- **'Tuple[List[Tuple[str, int]], List[Tuple[str, int]]]'**: A tuple containing lists of insertions and deletions.
+### Description
+- Generates commit data based on the Longest Common Subsequence (LCS) of the old and new texts.
+- Returns a tuple containing lists of insertions and deletions.
+### Function: backtracking
+```
+def backtracking(old_text: List[str], new_text: List[str], dp: List[List[int]]) -> Tuple[List[Tuple[str, int]], List[Tuple[str, int]]]:
+```
+Parameters
+- **'old_text'** (List[str]): List of words from the old text.
+- **'new_text'** (List[str]): List of words from the new text.
+- **'dp'** (List[List[int]]): Dynamic Programming table.
+
+### Returns
+- **'Tuple[List[Tuple[str, int]], List[Tuple[str, int]]]'**: A tuple containing lists of insertions and deletions.
+
+### Description
+- Implements backtracking to determine the Longest Common Subsequence (LCS) of the old and new texts.
+- Calls generate_commit_data to generate commit data based on the LCS.
+- Returns a tuple containing lists of insertions and deletions.
+### Function: longest_common_subsequence
+```
+def longest_common_subsequence(old_text: str, new_text: str) -> Tuple[List[Tuple[str, int]], List[Tuple[str, int]]]:
+```
+### Parameters
+- **'old_text'** (str): A line from the old text.
+- **'new_text'** (str): A line from the new text.
+### Returns
+- **'Tuple[List[Tuple[str, int]], List[Tuple[str, int]]]'**: A tuple containing lists of insertions and deletions.
+
+### Description
+- Converts the input lines into lists of words.
+- Uses Dynamic Programming to find the Longest Common Subsequence (LCS).
+- Calls backtracking to generate commit data based on the LCS.
+- Returns a tuple containing lists of insertions and deletions.
+### Function: diff_algorithm
+```
+def diff_algorithm(old_file: str, new_file: str) -> Dict[int, Tuple[List[Tuple[str, int]], List[Tuple[str, int]]]]:
+```
+### Parameters
+- **'old_file'** (str): The path to the old text file.
+- **'new_file'** (str): The path to the new text file.
+### Returns
+- **'Dict[int, Tuple[List[Tuple[str, int]], List[Tuple[str, int]]]]'**: A dictionary where keys are line numbers and values are tuples containing lists of insertions and deletions.
+### Description
+- Reads the content of the old and new text files.
+- Calls longest_common_subsequence to generate commit data for each line.
+- Returns a dictionary where keys are line numbers, and values are tuples containing lists of insertions and deletions.
+### Example
+```
+from diff_algorithm import diff_algorithm
+
+# Compare two text files and generate commit data
+commit_data = diff_algorithm('file_old.txt', 'file_new.txt')
+print(commit_data)
+```
+### Notes
+- The **'diff_algorithm'** module is designed to find the differences between two text files and generate commit data.
+- The commit data includes information about insertions and deletions for each line.
+- The algorithm uses Dynamic Programming and Longest Common Subsequence (LCS) to identify changes.
