@@ -40,3 +40,72 @@ init.create_tracking_file()
 - If Pastport initialization has already been completed in the provided location, a message will be displayed to notify the user.
 
 Note: Ensure that the terminal_output and os modules are properly imported before using the prt_init class.
+
+
+
+# Pastport Commit Module
+The **'prt_commit'** class is a crucial component of the Pastport system, responsible for creating commits within a specified location. It utilizes a diff algorithm to generate commit data and reconstructs old files for comparison. This documentation provides an overview of the **'prt_commit'** class and its methods.
+
+## File: prt_commit.py | Class: prt_commit
+### Constructor
+```
+def __init__(self, location: str = "", message: str = "Untitled Commit") -> None:
+```
+### Parameters
+- **'location'** (str, optional): The absolute path to the directory where Pastport commits should be created. If not provided, the current working directory will be used.
+- **'message'** (str, optional): A custom commit message. If not provided, the default message is "Untitled Commit."
+
+### Description
+- Initializes the prt_commit class with the specified location and commit message.
+- Reads the tracking file to determine the current state of tracked files.
+- Performs a cold start commit if Pastport has not been initialized.
+- Initiates either a normal commit or a cold commit based on the tracking information.
+- Updates the tracking file, current commit number, and commit log.
+#### Example
+```
+from pastport import prt_commit
+
+# Create a Pastport commit in a specified location with a custom message
+cmt = prt_commit(location=r'D:\Codes\Projects\Pastport\test_folder', message="Initial Commit")
+```
+### Method: 'commit'
+```
+def commit(self, file: str, commit_number: int) -> None:
+```
+### Parameters
+- **'file'** (str): The name of the file to be committed.
+- **'commit_number'** (int): The commit number for the current commit.
+
+### Description
+- Generates the old file from the initial commit data.
+- Uses the diff algorithm to compare the old file with the new file and obtain commit data.
+- Writes the commit data to the commit file.
+
+#### Example
+```
+cmt.commit(file="example.txt", commit_number=1)
+```
+### Method: cold_commit
+```
+def cold_commit(self, file: str, commit_number: int) -> None:
+```
+### Parameters
+- **'file'** (str): The name of the file for the cold commit.
+- **'commit_number'** (int): The commit number for the current commit.
+
+### Description
+- Creates a cold commit for untracked files.
+- Uses the diff algorithm to generate commit data for the initial commit.
+- Writes the commit data to the commit file.
+
+### Example
+```
+cmt.cold_commit(file="new_file.txt", commit_number=1)
+```
+### Notes
+- The **'prt_commit'** class is responsible for managing the commit process within the Pastport system.
+- Cold start commits are initiated when Pastport is initialized or when new files are detected.
+- Normal commits are performed for tracked files based on the tracking information from the previous commit.
+- Commit data is stored in commit files within the "prt" directory.
+
+Note: Ensure that the required modules (os, diff_algorithm, file_translator, and reconstructor) are properly imported before using the prt_commit class.
