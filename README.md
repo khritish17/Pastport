@@ -457,7 +457,7 @@ log_file.close()
 ### Example Usage
 ```
 # Execute the PASTPORT CLI
-python pastport_cli.py
+python cli.py
 ```
 ### Notes
 - The PRT CLI is designed to be intuitive and user-friendly, providing a simple interface for version control with PASTPORT.
