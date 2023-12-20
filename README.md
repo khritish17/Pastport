@@ -1,3 +1,257 @@
+# INTRODUCTION
+The Pastport system represents a basic iteration of a **Version Control System (VCS)**, designed to comprehend the fundamental principles of VCS operation. It aims to illustrate how data structures, algorithms, and general programming enable the development of valuable applications.
+
+The nomenclature **"Pastport"** is indicative of the system's visualization in terms of nodes and edges, where each commit in the process represents a node. Nodes are sometimes referred to as **"ports"** and in the context of a VCS, revisiting old commits inspired the name "Pastport."
+
+# Commit Node Structure
+The Pastport VCS system follows a **linear-direct sequential** structure, as depicted in the accompanying diagram. 
+
+Each node in the diagram signifies a commit made, preserving essential data. This data enables the regeneration of files committed at that specific point in time. The initial commit, designated as **'Commit 0'** saves entire files in their original state. Subsequent commits, starting from **'Commit 1'** and onwards, are built upon the foundation of "Commit 0."
+The commit node structure, illustrated in the aforementioned image, comprises four commits: **'Commit 0'**, **'Commit 1'**, **'Commit 2'**, and **'Commit 3'**. Commit 0 holds particular significance as the starting point, storing complete files precisely as they were during the initial commit. Reverting back to a prior commit, such as Commit 1 from Commit 3, involves retracing the steps back to Commit 0. From there, files are regenerated using the data from Commit 1.
+
+The structure of the commit node system is delineated as follows (please refer to the image above): there are four commits denoted as commit 0, commit 1, commit 2, and commit 3. Commit 0 holds a distinct status as the initial point, preserving complete files in their original form (the method of data storage will be elaborated upon as we progress). Subsequent commits are all derived from commit 0.
+
+> Consider the scenario where the system is presently at commit 3, and there is a desire to revert back to commit 1. To achieve this, one simply needs to return to commit 0, where the original data from the initial commit is stored. From this point, the files can be regenerated utilizing the data from commit 1.
+
+# Commit Data Structure
+The critical question arises: what information should each node store? Specifically, what constitutes the contents of commit data? 
+## Example: OT(Old Text) and NT(New Text) Transformation
+This can be elucidated through an example involving **old text (OT)** and **new text (NT)** transformation. 
+Let's say
+<div align="center">
+    
+**OT**: "Hello I am Khritish,"\
+**NT**: "Hello I Romen" 
+</div>
+
+The transformation involves deleting ["am", "Khritish"] from OT and inserting ["Romen"] 
+The common part, "Hello I," remains untouched.
+
+To extract deletion and insertion information, a straightforward approach is employed. 
+Firstly, identify the common part ("Hello, I"). 
+Anything in OT remaining after removing the common part necessitates deletion, as it does not exist in NT. 
+Conversely, anything in NT after removing the common part requires insertion. 
+
+For the provided example:\
+**Common part**: "Hello, I"\
+**Deletion**: OT - common part = "am," "Khritish"\
+**Insertion**: NT - common part = "Romen"
+<div align="center">
+    
+**New Text = (Old Text - deletions) + insertions**
+</div>
+
+Consequently, within each commit, the data stored in a node comprises the necessary insertion and deletion information. These details delineate the modifications required on commit 0 to generate the new text.
+
+# Longest Common Subsequences (LCS)
+Indeed, it is evident that identifying the common elements between two texts is crucial. To achieve this, we employ a ‘difference algorithm’, specifically the **Longest Common Subsequence (LCS)** algorithm. LCS determines the length of the longest sequence shared by both texts. This method employs Dynamic Programming and backtracking. A slight modification involves utilizing sequences of words instead of individual letters.
+
+Allow me to illustrate this process using an example:
+
+Consider the following texts:
+<div align="center">
+    
+**Old Text (OT)**: "How are you doing"\
+**New Text (NT)**: "How you doin’"
+</div>
+
+### Step 1: Tokenize the sentences
+<div align="center">
+
+**Tokenized Old Text (TOT)**: ["How", "are", "you", "doing"]\
+**Tokenized New Text (TNT)**: ["How", "you", "doin’"]
+</div>
+
+### Step 2: Set up the DP matrix
+Create a DP matrix of size **len(TOT) + 2  ✕  len(TNT) + 2**, filling it with **0**'s, where TOT represents Tokenized Old Text and TNT represents Tokenized New Text.
+|       | Ø  | How | you | doin |
+|-------|----|-----|-----|------|
+| Ø     | 0  | 0   | 0   | 0    |
+| How   | 0  | 0   | 0   | 0    |
+| are   | 0  | 0   | 0   | 0    |
+| you   | 0  | 0   | 0   | 0    |
+| doing | 0  | 0   | 0   | 0    |
+
+### Step 3: Populate the DP matrix using the algorithm below
+```
+For i : 1 to length(TOT) - 1 (Inclusive range)
+    For j : 1 to length(TNT) - 1 (Inclusive range)
+        If TOT[i] == TNT[j]:
+            DP[i][j] = DP[i-1][j-1] + 1
+        Else:
+	        DP[i][j] = max(DP[i][j-1], DP[i-1][j])
+```
+This algorithm sets up the DP matrix to extract the longest common subsequence.
+|       | Ø  | How | you | doin |
+|-------|----|-----|-----|------|
+| Ø     | 0  | 0   | 0   | 0    |
+| How   | 0  | 1   | 1   | 1    |
+| are   | 0  | 1   | 1   | 1    |
+| you   | 0  | 1   | 2   | 2    |
+| doing | 0  | 1   | 2   | 2    |
+
+
+### Step 4: Backtrack the DP matrix to obtain the longest common words using the following algorithm
+```
+Initialize an empty list LCS  = []
+i = length(DP) - 1, j = length(DP[0]) - 1
+While i != 0 and j != 0:
+	If TOT[i] == TNT[j]:
+		LCS = [TOT[i], i, j] + LCS
+	Else : 
+		If DP[i][j - 1] >= DP[i - 1][j]:
+			j = j - 1
+		Else if DP[i][j - 1] < DP[i - 1][j]:
+			i = i – 1
+```
+In the resulting LCS list, each element is a tuple containing the common word, the index corresponding to the old text (index_old), and the index corresponding to the new text (index_new).
+<div align="center">
+    
+**LCS = [common word, old_index, new_index]**
+</div>
+
+**Old_index**: Refers to the index of the word in the Tokenized Old Text (TOT), indicating its position within the original text.
+
+**New_index**: Denotes the index of the word in the Tokenized New Text (TNT), representing its location within the modified or new text.
+
+
+> Note\
+If **TNT** is empty, new_index is set to “None”.\
+If **TOT** is empty, old_index is set to “None”.
+
+
+
+# Generating the Commit Data
+Using the Longest Common Subsequences (LCS) method, the process involves identifying common words and determining **insertions** and **deletions**, incorporating index values for precision. Allow me to elucidate this process with an example:
+
+Let's consider:
+<div align="center">
+    
+**TOT** = ["Hello", "I", "am", "Khritish"]\
+**TNT** = ["Hello", "I", "Romen"]
+</div>
+
+### Step 1: Generate the Longest Common Subsequence, LCS
+<div align="center">
+    
+**LCS** = [("Hello", 0, 0), ("I", 1, 1)]
+</div>
+Here, the LCS tuple ("Hello", 0, 0) signifies that the common word "Hello" appears at index 0 in both TOT and TNT.
+("Hello", Index in TNT, Index in TOT)
+
+### Step 2: Obtain the Deletion Data
+<div align="center">
+ 
+**Deletion** = TOT - LCS\
+**Deletion** = ["Hello", "I", "am", "Khritish"] - [("Hello", 0, 0), ("I", 1, 1)]\
+**Deletion** = [("am", 2), ("Khritish", 3)]
+</div>
+In the deletion data, each tuple contains the word to be deleted and its corresponding index in TOT.
+
+### Step 3: Extract the Insertion Data
+<div align="center">
+ 
+**Insertion** = TNT - LCS\
+**Insertion** = ["Hello", "I", "Romen"] - [("Hello", 0, 0), ("I", 1, 1)]\
+**Insertion** = [("Romen", 2)]
+</div>
+
+Similarly, in the insertion data, each tuple contains the word to be inserted and its corresponding index in TNT.
+
+Commit Data Format:
+The final data stored in each commit is represented as a hashmap, where the key denotes the line number, and the corresponding value is a tuple containing insertion and deletion data.
+
+<div align="center">
+ 
+**Commit Data** = {Line number: (Insertion, Deletion)}
+</div>
+
+>Where:\
+Insertion = [(word to be inserted, corresponding index in TNT)]\
+Deletion = [(word to be deleted, corresponding index in TOT)]
+
+This structured approach ensures precise recording of insertion and deletion operations, facilitating accurate reconstruction of texts during version control operations.
+
+
+
+
+# Reconstruction Mechanism
+
+The reconstruction process involves building files for a specified commit using the initial or 0th commit, leveraging commit data. As previously outlined, commit data encapsulates structured information facilitating the transformation of an old text file into a new text file.
+
+To illustrate, consider the task of constructing a file, say "new.txt," from commit 3. This can be accomplished by using the initial version of "new.txt" (old.txt) found in commit 0, along with the commit data stored in commit 3. Each line in "old.txt" is converted to its corresponding line in "new.txt."
+
+Here is a step-by-step breakdown of the reconstruction process:
+
+- Create an empty list/array of length L, where L is given by the formula
+> L = length( old_line ) + Li − Ld\
+Li = length ( insertion_array_in_commit_data)\
+Ld=length(deletion_array_in_commit_data)
+This list represents the corresponding lines in "new.txt."
+- Since the newly generated list mirrors the lines in the new file, insert the insertion word at the new file index (available in the commit data) to avoid word collisions.
+- Delete the word from the old file line based on the deletion word (available in the commit data) at the old file index.
+- After deletion, insert the remaining words from the old line in a first-come-first-serve basis at the empty places in the generated list. This completes the generation of the final new line.
+
+**For example:**
+
+**Old line**: "Words are good but not bad"\
+**New line**: "Words will be good sword"
+
+**OLD (Tokenized)**: ["Words", "are", "good", "but", "not", "bad"]\
+**NEW (Tokenized)**: ["Words", "will", "be", "good", "sword"]
+
+
+Corresponding commit data for the conversion from OLD to NEW:
+<div align="center">
+ 
+**Commit data**: ( [(will, 1), (be, 2), (sword, 4)], [(are, 1), (but, 3), (not, 4), (bad, 5)] )
+</div>
+Here,
+
+Insertion array: [(will, 1), (be, 2), (sword, 4)]\
+> Li = length(Insertion array) = 3
+
+Deletion array: [(are, 1), (but, 3), (not, 4), (bad, 5)]\
+> Ld = length(Deletion array) = 4
+
+L = length(OLD) + Li − Ld = 6+3−4=5
+
+### Step 1: Empty list of length L, ARR
+<div align="center">
+ 
+ARR = [ Ø , Ø , Ø, Ø, Ø]
+</div>
+> (Ø represents an empty place)
+
+### Step 2: Insert the word into ARR
+<div align="center">
+ 
+ARR = [Ø , will, be, Ø, sword]
+</div>
+
+### Step 3: Deletion of words from OLD
+<div align="center">
+ 
+OLD = ["Words", "are", "good", "but", "not", "bad"]\
+OLD = ["Words", "good"]
+</div>
+
+### Step 4: Insert the leftover words in OLD in a first-come-first-insert basis into the empty slots of ARR
+<div align="center">
+ 
+ARR = ["Words", "will", "be", "good", "sword"]
+</div>
+This reconstruction process successfully transforms the new line from the old line with the aid of commit data.
+
+
+
+
+
+
+
+
+
+
 # Pastport Initialization Module
 The **'prt_init'** class is part of the Pastport system, which provides a mechanism for tracking changes to files within a specified directory. The primary purpose of this class is to initialize Pastport within a given location and set up the necessary files and directories for tracking.
 
